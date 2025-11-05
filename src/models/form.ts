@@ -17,49 +17,6 @@ export interface Estudios {
   adeudaMaterias: boolean;
 }
 
-export interface Convivencia {
-  nombre: string;
-  parentesco: string;
-}
-
-export interface Domicilio {
-  direccion: string;
-  convivencia: Convivencia[];
-}
-
-export interface ContactoEmergencia {
-  nombre: string;
-  apellido: string;
-  telefono: string;
-  email: string;
-  parentesco: string;
-}
-
-export interface SituacionLaboral {
-  trabaja: boolean;
-  lugar: string;
-}
-
-export interface Cobertura {
-  obraSocial: string;
-  beca: string;
-}
-
-export interface Tecnologia {
-  tieneComputadora: boolean;
-  tipoConexion: string;
-}
-
-export interface Transporte {
-  tipo: string;
-}
-
-export interface Redes {
-  email: string;
-  instagram: string;
-  linkedin: string;
-}
-
 export interface Archivos {
   dniFrente: string;
   dniDorso: string;
@@ -71,25 +28,6 @@ export interface FormData {
   progreso: number;
   datosPersonales: DatosPersonales;
   estudios: Estudios;
-  domicilio: Domicilio;
-  contactoEmergencia: ContactoEmergencia;
-  situacionLaboral: SituacionLaboral;
-  cobertura: Cobertura;
-  tecnologia: Tecnologia;
-  transporte: Transporte;
-  redes: Redes;
   archivos: Archivos;
-  pdfUrl?: string;
-  qrCode?: string;
 }
 
-export type FormSection = 
-  | 'datosPersonales'
-  | 'estudios'
-  | 'domicilio'
-  | 'contactoEmergencia'
-  | 'situacionLaboral'
-  | 'cobertura'
-  | 'tecnologia'
-  | 'transporte'
-  | 'redes';

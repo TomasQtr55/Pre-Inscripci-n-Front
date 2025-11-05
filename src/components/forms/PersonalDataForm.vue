@@ -1,16 +1,42 @@
+<script setup lang="ts">
+  import { defineEmits } from 'vue'
+
+  const emit = defineEmits(['next'])
+
+  const handleSubmit = (e: Event) => {
+    e.preventDefault()
+    // Aquí podrías validar los campos antes de avanzar
+    emit('next') // Avanzar al siguiente formulario
+  }
+
+</script>
+
 <template>
   <div class="space-y-6">
     <h2 class="text-2xl font-bold text-blue-800">Datos Personales</h2>
     
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <form class="grid grid-cols-1 md:grid-cols-2 gap-4"
+          @submit.prevent="handleSubmit">
       <div>
         <label class="block text-sm font-medium text-gray-700 mb-2">
           Nombre Completo *
         </label>
         <input
-          v-model="localData.nombreCompleto"
           type="text"
-          class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+          placeholder="Ej: Jose Luis"
+          class="w-full px-3 py-2 border border-gray-500 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+          required
+        />
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-2">
+          Apellido completo *
+        </label>
+        <input
+          type="text"
+          placeholder="Ej: Hernan"
+          class="w-full px-3 py-2 border border-gray-500 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
           required
         />
       </div>
@@ -20,9 +46,9 @@
           DNI *
         </label>
         <input
-          v-model="localData.dni"
           type="text"
-          class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+          placeholder="Ej: 42389234 ( DNI sin puntos )"
+          class="w-full px-3 py-2 border border-gray-500 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
           required
         />
       </div>
@@ -32,9 +58,21 @@
           CUIT
         </label>
         <input
-          v-model="localData.cuit"
           type="text"
-          class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+          placeholder="Ej: 20423892343 ( CUIT sin puntos ni guiones )"
+          class="w-full px-3 py-2 border border-gray-500 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+        />
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-2">
+          Telefono *
+        </label>
+        <input
+          type="text"
+          placeholder="Ej: 2894580819"
+          class="w-full px-3 py-2 border border-gray-500 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+          required
         />
       </div>
 
@@ -43,9 +81,9 @@
           Email *
         </label>
         <input
-          v-model="localData.email"
           type="email"
-          class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+          placeholder="ejemplo@gmail.com"
+          class="w-full px-3 py-2 border border-gray-500 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
           required
         />
       </div>
@@ -55,9 +93,9 @@
           Provincia *
         </label>
         <input
-          v-model="localData.provincia"
           type="text"
-          class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+          placeholder="Ej: Rio Negro"
+          class="w-full px-3 py-2 border border-gray-500 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
           required
         />
       </div>
@@ -67,34 +105,42 @@
           Ciudad *
         </label>
         <input
-          v-model="localData.ciudad"
           type="text"
-          class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+          placeholder="Ej: Cipolletti"
+          class="w-full px-3 py-2 border border-gray-500 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
           required
         />
       </div>
-    </div>
+
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-2">
+         Direccion *
+        </label>
+        <input
+          type="text"
+          placeholder="Ej: Emeralda 2092"
+          class="w-full px-3 py-2 border border-gray-500 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+          required
+        />
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-2">
+          Fecha Nacimiento *
+        </label>
+        <input
+          type="date"
+          class="w-full px-3 py-2 border border-gray-500 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+          required
+        />
+      </div>
+
+      <div class="md:col-start-2 md:justify-self-end">
+        <button type="submit" class="bg-orange-500 text-white p-4 rounded-xl w-full md:w-auto hover:bg-orange-600 transition-colors">
+          enviar
+        </button>
+      </div>
+    </form>
   </div>
 </template>
 
-<script setup lang="ts">
-import { ref, watch } from 'vue';
-import type { DatosPersonales } from '@/models/form';
-
-interface Props {
-  formData: DatosPersonales;
-}
-
-interface Emits {
-  (e: 'update', data: DatosPersonales): void;
-}
-
-const props = defineProps<Props>();
-const emit = defineEmits<Emits>();
-
-const localData = ref<DatosPersonales>({ ...props.formData });
-
-watch(localData, (newValue: DatosPersonales) => {
-  emit('update', newValue);
-}, { deep: true });
-</script>
