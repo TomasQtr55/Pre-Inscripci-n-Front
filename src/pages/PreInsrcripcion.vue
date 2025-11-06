@@ -27,7 +27,7 @@ const goToNextStep = () => {
       <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
           <PersonalDataForm v-if="currentStep === 1" @next="goToNextStep"/> 
           <StudiesForm v-if="currentStep === 2" @next="goToNextStep"/>
-          <FilesForms v-if="currentStep === 3" />
+          <FilesForms v-if="currentStep === 3" @next="goToNextStep"/>
       </div>
       
      <!--  <StudiesForm/>
