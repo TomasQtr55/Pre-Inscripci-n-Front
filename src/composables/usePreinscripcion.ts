@@ -42,5 +42,22 @@ export function usePreinscripcion() {
         }
     }
 
-    return { loading, error, success, registrar, agregarEstudios }
+    const agregarArchivos = async (dni: string, formData: FormData) =>{
+        loading.value = true;
+        error.value = null;
+
+
+        try {
+            const res = await preinscService.agregarArchivos(dni, formData);
+            success.value = res.message || 'Archivos subidos correctamente'
+            return res
+        }catch(err: any){
+            error.value = err?.message || 'Error al subir los archivos'
+            throw err;
+        }finally{
+            loading.value =false
+        }
+    }
+
+    return { loading, error, success, registrar, agregarEstudios, agregarArchivos }
 }

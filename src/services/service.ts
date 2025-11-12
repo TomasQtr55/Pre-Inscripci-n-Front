@@ -16,7 +16,15 @@ export const agregarEstudios = async (dni: string, body: EstudiosSecundariosBody
     return res.data;
 }
 
+export const agregarArchivos = async (dni: string, formData: FormData) => {
+    const response = await api.post(`preinscripto/${dni}/documentacion`, formData, {
+        headers: {'Content-Type': 'multipart/form-data'},
+    });
+    return response.data
+}
+
 export default {
     registrarPreinscripto,
-    agregarEstudios
+    agregarEstudios,
+    agregarArchivos
 }

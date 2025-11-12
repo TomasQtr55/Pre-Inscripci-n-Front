@@ -1,31 +1,60 @@
-
 <script setup lang="ts">
- import { ref } from 'vue';
-import { useRouter } from 'vue-router';
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+import { usePreinscripcion } from '@/composables/usePreinscripcion'
 
- const dniFrente = ref < File | null>(null)
- const dniDorso = ref < File | null>(null)
- const tituloSec = ref < File | null>(null)
- const certificadoMed = ref < File | null>(null)
- 
- const router = useRouter()
-  const enviarFormulario = () => {
-  if (dniFrente.value && dniDorso.value && certificadoMed.value) {
+// Router
+const router = useRouter()
+
+// Composable
+const { loading, error, success, agregarArchivos } = usePreinscripcion()
+
+// Archivos
+const dniFrente = ref<File | null>(null)
+const dniDorso = ref<File | null>(null)
+const tituloSec = ref<File | null>(null)
+const certificadoMed = ref<File | null>(null)
+
+// DNI almacenado localmente
+const dni = localStorage.getItem('dni')
+
+// Enviar formulario
+const enviarFormulario = async (e: Event) => {
+  e.preventDefault()
+
+  if (!dniFrente.value || !dniDorso.value || !certificadoMed.value) {
+    alert('Por favor, completá todos los campos obligatorios (*)')
+    return
+  }
+
+  if (!dni) {
+    alert('No se encontró el DNI del usuario. Volvé a completar el formulario anterior.')
+    return
+  }
+
+  try {
+    const formData = new FormData()
+    formData.append('dniFrente', dniFrente.value)
+    formData.append('dniDorso', dniDorso.value)
+    if (tituloSec.value) formData.append('tituloSecundario', tituloSec.value)
+    formData.append('certificadoBuenaSalud', certificadoMed.value)
+
+    await agregarArchivos(dni, formData)
+
+    
     router.push('/Formulario-Terminado')
-  } else {
-    console.log("no esta comlpleto el formulario");
+  } catch (err) {
+    console.error('Error al subir archivos:', err)
     
   }
 }
-
-
 </script>
 
 <template>
   <div class="space-y-6">
     <h2 class="text-2xl font-bold text-blue-800">Documentación Requerida</h2>
-    
-    <form class="space-y-6">
+
+    <form class="space-y-6" @submit.prevent="enviarFormulario">
       <!-- DNI Frente -->
       <div class="border border-gray-200 rounded-lg p-4">
         <label class="block text-sm font-medium text-gray-700 mb-2">
@@ -33,12 +62,11 @@ import { useRouter } from 'vue-router';
         </label>
         <input
           type="file"
-         @change="(e) => dniFrente = (e.target as HTMLInputElement).files?.[0] || null"
+          @change="(e) => dniFrente = (e.target as HTMLInputElement).files?.[0] || null"
           accept=".pdf,.jpg,.jpeg,.png"
           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
           required
         />
-        <p class="text-xs text-gray-500 mt-1">Foto o scan del frente de tu DNI</p>
         <div v-if="dniFrente" class="mt-2 text-sm text-green-600 flex items-center">
           <span class="w-2 h-2 bg-green-500 rounded-full mr-2"></span>
           Archivo cargado correctamente
@@ -52,12 +80,11 @@ import { useRouter } from 'vue-router';
         </label>
         <input
           type="file"
-         @change="(e) => dniDorso = (e.target as HTMLInputElement).files?.[0] || null"
+          @change="(e) => dniDorso = (e.target as HTMLInputElement).files?.[0] || null"
           accept=".pdf,.jpg,.jpeg,.png"
           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
           required
         />
-        <p class="text-xs text-gray-500 mt-1">Foto o scan del dorso de tu DNI</p>
         <div v-if="dniDorso" class="mt-2 text-sm text-green-600 flex items-center">
           <span class="w-2 h-2 bg-green-500 rounded-full mr-2"></span>
           Archivo cargado correctamente
@@ -71,54 +98,48 @@ import { useRouter } from 'vue-router';
         </label>
         <input
           type="file"
-         @change="(e) => tituloSec = (e.target as HTMLInputElement).files?.[0] || null"
+          @change="(e) => tituloSec = (e.target as HTMLInputElement).files?.[0] || null"
           accept=".pdf,.jpg,.jpeg,.png"
           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
         />
-        <p class="text-xs text-gray-500 mt-1">Título secundario o constancia de título en trámite</p>
         <div v-if="tituloSec" class="mt-2 text-sm text-green-600 flex items-center">
           <span class="w-2 h-2 bg-green-500 rounded-full mr-2"></span>
           Archivo cargado correctamente
         </div>
       </div>
 
+      <!-- Certificado Médico -->
       <div class="border border-gray-200 rounded-lg p-4">
         <label class="block text-sm font-medium text-gray-700 mb-2">
           Certificado de Salud *
         </label>
         <input
           type="file"
-         @change="(e) => certificadoMed = (e.target as HTMLInputElement).files?.[0] || null"
+          @change="(e) => certificadoMed = (e.target as HTMLInputElement).files?.[0] || null"
           accept=".pdf,.jpg,.jpeg,.png"
           class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
           required
         />
-        <p class="text-xs text-gray-500 mt-1">Foto o scan del certificado</p>
         <div v-if="certificadoMed" class="mt-2 text-sm text-green-600 flex items-center">
           <span class="w-2 h-2 bg-green-500 rounded-full mr-2"></span>
           Archivo cargado correctamente
         </div>
       </div>
 
-      <!-- Requisitos de Archivos -->
-      <div class="bg-orange-50 p-4 rounded-lg">
-        <h3 class="font-medium text-orange-800 mb-2">Requisitos de los archivos:</h3>
-        <ul class="text-sm text-orange-700 space-y-1">
-          <li>• Formatos aceptados: PDF, JPG, PNG</li>
-          <li>• Tamaño máximo por archivo: 5MB</li>
-          <li>• Las imágenes deben ser legibles y nítidas</li>
-          <li>• Los documentos deben estar actualizados</li>
-        </ul>
-      </div>
-      
-       <div type="submit" class="md:col-start-2 md:justify-self-end">
-        
-        <button type="submit" @click="enviarFormulario" class="bg-orange-500 text-white p-4 rounded-xl w-full md:w-auto hover:bg-orange-600 transition-colors">
-          enviar
+      <!-- Botón Enviar -->
+      <div class="md:col-start-2 md:justify-self-end">
+        <button
+          type="submit"
+          :disabled="loading"
+          class="bg-orange-500 text-white p-4 rounded-xl w-full md:w-auto hover:bg-orange-600 transition-colors disabled:opacity-50"
+        >
+          {{ loading ? 'Enviando...' : 'Enviar' }}
         </button>
-        
-       </div>
+      </div>
+
+      <!-- Mensajes -->
+      <p v-if="error" class="text-red-600 text-sm mt-2">{{ error }}</p>
+      <p v-if="success" class="text-green-600 text-sm mt-2">{{ success }}</p>
     </form>
   </div>
 </template>
-
