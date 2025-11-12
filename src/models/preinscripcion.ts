@@ -18,11 +18,10 @@ export interface PreinscripcionCrearBody {
 
 export interface EstudiosSecundariosBody {
   secundarioCompleto: boolean;
-  institucion?: string | null;
-  anioEgreso?: number | null;
-  ciudadInstitucion?: string | null;
-  provinciaInstitucion?: string | null;
-  analiticoConstanciaUrl?: string | null;
+  institucion?: string;
+  anioEgreso?: number;
+  ciudadInstitucion?: string;
+  provinciaInstitucion?: string;
 }
 
 export interface ApiResponse<T = any> {

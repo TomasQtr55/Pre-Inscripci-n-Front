@@ -23,19 +23,17 @@
     }
   })
 
+  
   const onSubmit = async () => {
     try {
       await registrar(JSON.parse(JSON.stringify(form)));
-    }catch(e){
-
+      localStorage.setItem('dni', form.datosPersonales.dni);
+      emit('next')
+    }catch(err){
+      console.error(err)
     }
   }
 
-  const handleSubmit = (e: Event) => {
-    e.preventDefault()
-    // Aquí podrías validar los campos antes de avanzar
-    emit('next') // Avanzar al siguiente formulario
-  }
 
 </script>
 

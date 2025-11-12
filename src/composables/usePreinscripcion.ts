@@ -10,19 +10,19 @@ export function usePreinscripcion() {
     const success = ref<string | null>(null);
 
 
-    const registrar = async (payload : PreinscripcionCrearBody) => {
+    const registrar = async (payload: PreinscripcionCrearBody) => {
         loading.value = true;
         error.value = null;
         success.value = null
 
-        try{
+        try {
             const res = await preinscService.registrarPreinscripto(payload);
             success.value = res?.message || 'registrado correctamente'
             return res
-        } catch (err:any){
+        } catch (err: any) {
             error.value = err?.message || 'Error al regisrar'
             throw err;
-        }finally{
+        } finally {
             loading.value = false
         }
     };
@@ -30,17 +30,17 @@ export function usePreinscripcion() {
     const agregarEstudios = async (dni: string, body: EstudiosSecundariosBody) => {
         loading.value = true;
         error.value = null;
-        try{
+        try {
             const res = await preinscService.agregarEstudios(dni, body);
             success.value = res.message || 'Estudios agregados'
             return res
         } catch (err: any) {
             error.value = err?.message || 'Error al agregar estudios'
             throw err;
-        }finally{
+        } finally {
             loading.value = false
         }
     }
 
-    return { loading, error, success, registrar, agregarEstudios}
+    return { loading, error, success, registrar, agregarEstudios }
 }
