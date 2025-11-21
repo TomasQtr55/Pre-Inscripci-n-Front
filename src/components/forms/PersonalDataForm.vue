@@ -190,10 +190,6 @@
           enviar
         </button>
         <div class="mt-4 flex items-center gap-2">
-          <button :disabled="loading" class="btn-primary">
-            <span v-if="loading">Enviando...</span>
-            <span v-else>Enviar preinscripción</span>
-          </button>
           <p v-if="error" class="text-red-500">{{ error }}</p>
           <p v-if="success" class="text-green-600">{{ success }}</p>
         </div>

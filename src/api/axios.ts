@@ -9,17 +9,7 @@ const api = axios.create({
     timeout: 10000
 });
 
-/* api.interceptors.request.use(
-    (config) => {
-        const adminkey = import.meta.env.VITE_API_BASE_URL;
 
-        if( adminkey && config.headers && config.url?.startsWith('/admin')) {
-            config.headers['x-api-key'] = adminkey
-        }
-        return config
-    },
-    (error) => Promise.reject(error)
-); */
 
 api.interceptors.response.use(
     (response) => response,
